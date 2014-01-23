@@ -19,10 +19,11 @@
 #
 ###
 #
-# Usage: log-temperature.sh [-i SECONDS] [-1] [-f] [-h]
+# Usage: log-temperature.sh [-i SECONDS] [-1] [-t] [-f] [-h]
 #
 #  -i	interval of readings (in seconds)
 #  -1	poll once and exit
+#  -t	display only temperatures, not datetime
 #  -f	display temperature in Fahrenheit
 #  -h	print help
 #
@@ -62,12 +63,13 @@ function convert_f {
 
 
 # Handle command-line options and arguments
-while getopts ":i:fh1" opt; do
+while getopts ":i:fht1" opt; do
   case $opt in
   	h)
-  		echo -e "Usage: log-temperature.sh [-i SECONDS] [-1] [-f] [-h]\n"
+  		echo -e "Usage: log-temperature.sh [-i SECONDS] [-1] [-t] [-f] [-h]\n"
 		echo    "  -i	interval in seconds (default 10)"
 		echo    "  -1	poll temperatures only once and exit"
+		echo    "  -t	display only temperatures, not datetime"
 		echo    "  -f	display temperatures in Fahrenheit"
 		echo -e "  -h	print help\n"
 		echo    "Example: $0 -i 2 -f"
@@ -85,6 +87,9 @@ while getopts ":i:fh1" opt; do
 		;;
 	f)
 		OPF=true
+		;;
+	t)
+		OPT=true
 		;;
 	1)
 		OP1=true
@@ -107,12 +112,15 @@ done
 while :
 		do
 			# Display date and time (ready, set, action!)
-			echo -en $(date +"%d-%m-%Y %T\t")
+			if [ ! $OPT ]
+					then
+						echo -en $(date +"%d-%m-%Y %T\t")
+			fi
 
 			# Poll everything
 			DISPLAY_SOC=$(read_soc)
 			DISPLAY_W1=$(read_w1)
-			
+
 			# Do the Fahrenheit dance OR display sane numbers
 			if [ $OPF ]
 					then

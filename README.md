@@ -18,11 +18,12 @@ Raspbian does not come with a CLI calculator(?), so use `sudo apt-get install bc
 ### Usage
 
 ```
-	./log-temperature.sh [-i SECONDS] [-1] [-f] [-h]
+	./log-temperature.sh [-i SECONDS] [-1] [-t] [-f] [-h]
 ```
 
 * `-i`	interval of readings (in seconds)
 * `-1`	poll once and exit
+* `-t`	display only temperatures, not datetime
 * `-f`	display temperature in Fahrenheit
 * `-h`	print help
 
